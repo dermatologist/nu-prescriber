@@ -4,4 +4,4 @@
 
 ## Data Model
 
-![Nu Prescriber](https://raw.github.com/E-Health/nu-prescriber/master/NuPrescriber/Docs/ER-Model.JPG)
+![Nu Prescriber](https://raw.github.com/dermatologist/nu-prescriber/master/NuPrescriber/Docs/ER-Model.JPG)
