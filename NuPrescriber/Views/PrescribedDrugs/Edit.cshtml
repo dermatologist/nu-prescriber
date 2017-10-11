@@ -1,0 +1,71 @@
+@model NuPrescriber.Models.PrescriptionViewModels.PrescribedDrug
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>PrescribedDrug</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="PrescribedDrugId" />
+        <div class="form-group">
+            <label asp-for="Dose" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Dose" class="form-control" />
+                <span asp-validation-for="Dose" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Duration" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Duration" class="form-control" />
+                <span asp-validation-for="Duration" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Frequency" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Frequency" class="form-control" />
+                <span asp-validation-for="Frequency" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Instructions" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Instructions" class="form-control" />
+                <span asp-validation-for="Instructions" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="PrescriptionId" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="PrescriptionId" class="form-control" asp-items="ViewBag.PrescriptionId"></select>
+                <span asp-validation-for="PrescriptionId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProprietaryId" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="ProprietaryId" class="form-control" asp-items="ViewBag.ProprietaryId"></select>
+                <span asp-validation-for="ProprietaryId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

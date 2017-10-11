@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  nuprescriber:
+    image: nuprescriber
+    build:
+      context: ./NuPrescriber
+      dockerfile: Dockerfile
+    ports:
+      - 8088:80
+    volumes:
+      - prescriber-app:/app
+volumes:
+  prescriber-app:

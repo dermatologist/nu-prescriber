@@ -1,0 +1,59 @@
+@model NuPrescriber.Models.PrescriptionViewModels.PrescribedDrug
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PrescribedDrug</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <input type="hidden" asp-for="PrescribedDrugId" />
+        <dt>
+            @Html.DisplayNameFor(model => model.Dose)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Dose)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Duration)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Duration)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Frequency)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Frequency)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Instructions)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Instructions)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Prescription)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Prescription.PrescriptionId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Proprietary)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Proprietary.ProprietaryId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </form>
+</div>
