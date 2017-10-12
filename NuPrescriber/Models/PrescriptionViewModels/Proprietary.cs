@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace NuPrescriber.Models.PrescriptionViewModels
         public string Price { get; set; }
         public string Notes { get; set; }
 
-        public int IngredientId { get; set; }
-        public Ingredient Ingredient { get; set; }
+        [Display(Name = "Ingredients")]
+        public ICollection<IngredientProprietary> IngredientsProprietaries { get; set; }
     }
 }

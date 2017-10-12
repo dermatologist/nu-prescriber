@@ -1,9 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuPrescriber.Data;
 using NuPrescriber.Models.PrescriptionViewModels;
@@ -22,7 +20,7 @@ namespace NuPrescriber.Controllers
         // GET: Proprietaries
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Proprietaries.Include(p => p.Ingredient);
+            var applicationDbContext = _context.Proprietaries.Include(p => p.IngredientsProprietaries);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,20 +33,28 @@ namespace NuPrescriber.Controllers
             }
 
             var proprietary = await _context.Proprietaries
-                .Include(p => p.Ingredient)
+                .Include(p => p.IngredientsProprietaries)
                 .SingleOrDefaultAsync(m => m.ProprietaryId == id);
             if (proprietary == null)
             {
                 return NotFound();
             }
 
+            if (proprietary.IngredientsProprietaries.Any())
+            {
+                var selectedIngredientsIds = proprietary.IngredientsProprietaries.Select(x => x.IngredientId);
+                ViewData["SelectedIngredients"] = _context.Ingredients.Where(i => selectedIngredientsIds.Contains(i.IngredientId)).Select(ing => ing.Name).ToList();
+            }
+            
             return View(proprietary);
         }
-
         // GET: Proprietaries/Create
         public IActionResult Create()
         {
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId");
+            var proprietary = new Proprietary();
+            proprietary.IngredientsProprietaries = new List<IngredientProprietary>();
+            AssignIngredients(proprietary);
+
             return View();
         }
 
@@ -57,15 +63,24 @@ namespace NuPrescriber.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProprietaryId,Name,Manufacturer,Price,Notes,IngredientId")] Proprietary proprietary)
+        public async Task<IActionResult> Create([Bind("ProprietaryId,Name,Manufacturer,Price,Notes")] Proprietary proprietary, string[] selectedIngredients)
         {
+            if (selectedIngredients != null)
+            {
+                proprietary.IngredientsProprietaries = new List<IngredientProprietary>();
+                foreach (var ingredient in selectedIngredients)
+                {
+                    var ingredientToAdd = new IngredientProprietary() { IngredientId = int.Parse(ingredient), ProprietaryId = proprietary.ProprietaryId };
+                    proprietary.IngredientsProprietaries.Add(ingredientToAdd);
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(proprietary);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId", proprietary.IngredientId);
+            AssignIngredients(proprietary);
             return View(proprietary);
         }
 
@@ -77,37 +92,44 @@ namespace NuPrescriber.Controllers
                 return NotFound();
             }
 
-            var proprietary = await _context.Proprietaries.SingleOrDefaultAsync(m => m.ProprietaryId == id);
+            var proprietary = await _context.Proprietaries
+                .Include(p => p.IngredientsProprietaries)
+                .SingleOrDefaultAsync(m => m.ProprietaryId == id);
             if (proprietary == null)
             {
                 return NotFound();
             }
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId", proprietary.IngredientId);
+
+            AssignIngredients(proprietary);
+
             return View(proprietary);
         }
-
         // POST: Proprietaries/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProprietaryId,Name,Manufacturer,Price,Notes,IngredientId")] Proprietary proprietary)
+        public async Task<IActionResult> Edit(int? id,  string[] selectedIngredients)
         {
-            if (id != proprietary.ProprietaryId)
+            if (id == null)
             {
                 return NotFound();
             }
 
+            var proprietaryToUpdate = await _context.Proprietaries
+                .Include(p => p.IngredientsProprietaries)
+                .SingleOrDefaultAsync(i => i.ProprietaryId == id);
+
             if (ModelState.IsValid)
             {
+                UpdateIngredients(proprietaryToUpdate, selectedIngredients);
                 try
                 {
-                    _context.Update(proprietary);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProprietaryExists(proprietary.ProprietaryId))
+                    if (!ProprietaryExists(proprietaryToUpdate.ProprietaryId))
                     {
                         return NotFound();
                     }
@@ -118,10 +140,11 @@ namespace NuPrescriber.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId", proprietary.IngredientId);
-            return View(proprietary);
-        }
+            UpdateIngredients(proprietaryToUpdate, selectedIngredients);
+            AssignIngredients(proprietaryToUpdate);
 
+            return View(proprietaryToUpdate);
+        }
         // GET: Proprietaries/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -131,7 +154,7 @@ namespace NuPrescriber.Controllers
             }
 
             var proprietary = await _context.Proprietaries
-                .Include(p => p.Ingredient)
+                .Include(p => p.IngredientsProprietaries)
                 .SingleOrDefaultAsync(m => m.ProprietaryId == id);
             if (proprietary == null)
             {
@@ -140,7 +163,6 @@ namespace NuPrescriber.Controllers
 
             return View(proprietary);
         }
-
         // POST: Proprietaries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -155,6 +177,62 @@ namespace NuPrescriber.Controllers
         private bool ProprietaryExists(int id)
         {
             return _context.Proprietaries.Any(e => e.ProprietaryId == id);
+        }
+
+        private void AssignIngredients(Proprietary proprietary)
+        {
+            var ingredients = _context.Ingredients;
+            var ingredientsForProprietary = new HashSet<int>(proprietary.IngredientsProprietaries.Select(i => i.IngredientId));
+            var viewmodel = new List<IngredientAssignment>();
+            foreach (var ingredient in ingredients)
+            {
+                viewmodel.Add(new IngredientAssignment
+                {
+                    Id = ingredient.IngredientId,
+                    Name = ingredient.Name,
+                    Assigned = ingredientsForProprietary.Contains(ingredient.IngredientId)
+                });
+            }
+            ViewData["Ingredients"] = viewmodel;
+        }
+
+        private void UpdateIngredients(Proprietary proprietary, string[] selectedIngredients)
+        {
+            if (selectedIngredients == null)
+            {
+                proprietary.IngredientsProprietaries = new List<IngredientProprietary>();
+            }
+
+            var selectedIngredientsHashSet = new HashSet<string>(selectedIngredients);
+            var proprietaryIngredients = new HashSet<int>(proprietary.IngredientsProprietaries.Select(ip => ip.IngredientId));
+
+            foreach (var ingredient in _context.Ingredients)
+            {
+                if (selectedIngredientsHashSet.Contains(ingredient.IngredientId.ToString()))
+                {
+                    if (!proprietaryIngredients.Contains(ingredient.IngredientId))
+                    {
+                        proprietary.IngredientsProprietaries.Add(new IngredientProprietary
+                        {
+                            IngredientId = ingredient.IngredientId,
+                            ProprietaryId = proprietary.ProprietaryId
+                        });
+                    }
+                }
+                else
+                {
+                    if (proprietaryIngredients.Contains(ingredient.IngredientId))
+                    {
+                        var ingredientToRemove =
+                            proprietary.IngredientsProprietaries.SingleOrDefault(ip =>
+                                ip.IngredientId == ingredient.IngredientId);
+                        if (ingredientToRemove != null)
+                        {
+                            _context.Remove(ingredientToRemove);
+                        }
+                    }
+                }
+            }
         }
     }
 }
