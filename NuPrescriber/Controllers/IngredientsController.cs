@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuPrescriber.Data;
 using NuPrescriber.Models.PrescriptionViewModels;
@@ -42,7 +39,6 @@ namespace NuPrescriber.Controllers
 
             return View(ingredient);
         }
-
         // GET: Ingredients/Create
         public IActionResult Create()
         {
@@ -64,7 +60,6 @@ namespace NuPrescriber.Controllers
             }
             return View(ingredient);
         }
-
         // GET: Ingredients/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -115,7 +110,6 @@ namespace NuPrescriber.Controllers
             }
             return View(ingredient);
         }
-
         // GET: Ingredients/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -133,7 +127,6 @@ namespace NuPrescriber.Controllers
 
             return View(ingredient);
         }
-
         // POST: Ingredients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

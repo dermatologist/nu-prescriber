@@ -13,5 +13,7 @@ namespace NuPrescriber.Models.PrescriptionViewModels
         public string Quantity { get; set; }
         public string Notes { get; set; }
 
+        public ICollection<IngredientProprietary> IngredientProprietaries { get; set; }
+
     }
 }

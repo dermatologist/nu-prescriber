@@ -35,10 +35,19 @@
             @Html.DisplayFor(model => model.Notes)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Ingredient)
+            Ingredients
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Ingredient.IngredientId)
+            <ul>
+                @{
+                    List<string> selectedIngredients = ViewBag.SelectedIngredients;
+
+                    foreach (var ingredient in selectedIngredients)
+                    {
+                        @:<li>@ingredient</li>
+                    }
+                }
+            </ul>
         </dd>
     </dl>
 </div>

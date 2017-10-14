@@ -24,14 +24,23 @@ namespace NuPrescriber.Data
         public DbSet<Proprietary> Proprietaries { get; set; }
         public DbSet<PrescribedDrug> PrescribedDrugs { get; set; }
         public DbSet<Allergy> Allergies { get; set; }
-
+        public DbSet<IngredientProprietary> IngredientsProprietaries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+            builder.Entity<IngredientProprietary>()
+                .HasKey(ip => new { ip.IngredientId, ip.ProprietaryId });
+
+            builder.Entity<IngredientProprietary>()
+                .HasOne(ip => ip.Ingredient)
+                .WithMany(ip => ip.IngredientProprietaries)
+                .HasForeignKey(ip => ip.IngredientId);
+
+            builder.Entity<IngredientProprietary>()
+                .HasOne(ip => ip.Proprietary)
+                .WithMany(ip => ip.IngredientsProprietaries)
+                .HasForeignKey(ip => ip.ProprietaryId);
         }
     }
 }

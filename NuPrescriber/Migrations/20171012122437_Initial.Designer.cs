@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using NuPrescriber.Data;
 using NuPrescriber.Models.PrescriptionViewModels;
 
-namespace NuPrescriber.Data.Migrations
+namespace NuPrescriber.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171012122437_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");
@@ -227,6 +228,19 @@ namespace NuPrescriber.Data.Migrations
                     b.ToTable("Ingredients");
                 });
 
+            modelBuilder.Entity("NuPrescriber.Models.PrescriptionViewModels.IngredientProprietary", b =>
+                {
+                    b.Property<int>("IngredientId");
+
+                    b.Property<int>("ProprietaryId");
+
+                    b.HasKey("IngredientId", "ProprietaryId");
+
+                    b.HasIndex("ProprietaryId");
+
+                    b.ToTable("IngredientsProprietaries");
+                });
+
             modelBuilder.Entity("NuPrescriber.Models.PrescriptionViewModels.Patient", b =>
                 {
                     b.Property<int>("PatientId")
@@ -296,8 +310,6 @@ namespace NuPrescriber.Data.Migrations
                     b.Property<int>("ProprietaryId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("IngredientId");
-
                     b.Property<string>("Manufacturer");
 
                     b.Property<string>("Name");
@@ -307,8 +319,6 @@ namespace NuPrescriber.Data.Migrations
                     b.Property<string>("Price");
 
                     b.HasKey("ProprietaryId");
-
-                    b.HasIndex("IngredientId");
 
                     b.ToTable("Proprietaries");
                 });
@@ -363,6 +373,19 @@ namespace NuPrescriber.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("NuPrescriber.Models.PrescriptionViewModels.IngredientProprietary", b =>
+                {
+                    b.HasOne("NuPrescriber.Models.PrescriptionViewModels.Ingredient", "Ingredient")
+                        .WithMany("IngredientProprietaries")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("NuPrescriber.Models.PrescriptionViewModels.Proprietary", "Proprietary")
+                        .WithMany("IngredientProprietaries")
+                        .HasForeignKey("ProprietaryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("NuPrescriber.Models.PrescriptionViewModels.PrescribedDrug", b =>
                 {
                     b.HasOne("NuPrescriber.Models.PrescriptionViewModels.Prescription", "Prescription")
@@ -386,14 +409,6 @@ namespace NuPrescriber.Data.Migrations
                     b.HasOne("NuPrescriber.Models.PrescriptionViewModels.Patient", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("NuPrescriber.Models.PrescriptionViewModels.Proprietary", b =>
-                {
-                    b.HasOne("NuPrescriber.Models.PrescriptionViewModels.Ingredient", "Ingredient")
-                        .WithMany()
-                        .HasForeignKey("IngredientId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }
