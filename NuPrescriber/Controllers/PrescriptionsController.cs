@@ -43,14 +43,21 @@ namespace NuPrescriber.Controllers
                 return NotFound();
             }
 
-            return View(prescription);
+            ViewData["Doctor"] = prescription.Doctor.Name;
+            ViewData["Patient"] = prescription.Patient.Name;
+            ViewData["Department"] = prescription.Doctor.Department;
+            ViewData["Date"] = prescription.Date;
+
+            var prescribedDrugs = _context.PrescribedDrugs.Include(n => n.Proprietary).Where(m => m.PrescriptionId == id).AsNoTracking();
+
+            return View(await prescribedDrugs.ToListAsync());
         }
 
         // GET: Prescriptions/Create
         public IActionResult Create()
         {
-            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId");
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId");
+            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name");
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name");
             return View();
         }
 

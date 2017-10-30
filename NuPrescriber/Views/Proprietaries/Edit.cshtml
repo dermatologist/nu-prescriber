@@ -1,3 +1,4 @@
+@using NuPrescriber.Models.PrescriptionViewModels
 @model NuPrescriber.Models.PrescriptionViewModels.Proprietary
 
 @{
@@ -46,7 +47,7 @@
                     <tr>
                         @{
                             int cnt = 0;
-                            List<NuPrescriber.Controllers.IngredientAssignment> ingredients = ViewBag.Ingredients;
+                            List<IngredientAssignment> ingredients = ViewBag.Ingredients;
 
                             foreach (var ingredient in ingredients)
                             {

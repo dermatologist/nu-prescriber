@@ -28,7 +28,7 @@
         <div class="form-group">
             <label asp-for="Gender" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="Gender" class="form-control"></select>
+                <select asp-for="Gender" class="form-control" asp-items="Html.GetEnumSelectList<NuPrescriber.Models.PrescriptionViewModels.Gender>()"></select>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
         </div>

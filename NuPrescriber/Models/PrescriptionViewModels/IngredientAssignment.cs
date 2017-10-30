@@ -1,4 +1,4 @@
-﻿namespace NuPrescriber.Controllers
+﻿namespace NuPrescriber.Models.PrescriptionViewModels
 {
     public class IngredientAssignment
     {
