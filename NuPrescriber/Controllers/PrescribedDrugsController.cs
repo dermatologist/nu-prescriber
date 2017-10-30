@@ -67,8 +67,8 @@ namespace NuPrescriber.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "PrescriptionId", prescribedDrug.PrescriptionId);
-            ViewData["ProprietaryId"] = new SelectList(_context.Proprietaries, "ProprietaryId", "ProprietaryId", prescribedDrug.ProprietaryId);
+            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "Date", prescribedDrug.PrescriptionId);
+            ViewData["ProprietaryId"] = new SelectList(_context.Proprietaries, "ProprietaryId", "Name", prescribedDrug.ProprietaryId);
             return View(prescribedDrug);
         }
 
@@ -85,8 +85,8 @@ namespace NuPrescriber.Controllers
             {
                 return NotFound();
             }
-            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "PrescriptionId", prescribedDrug.PrescriptionId);
-            ViewData["ProprietaryId"] = new SelectList(_context.Proprietaries, "ProprietaryId", "ProprietaryId", prescribedDrug.ProprietaryId);
+            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "Date", prescribedDrug.PrescriptionId);
+            ViewData["ProprietaryId"] = new SelectList(_context.Proprietaries, "ProprietaryId", "Name", prescribedDrug.ProprietaryId);
             return View(prescribedDrug);
         }
 
@@ -122,8 +122,8 @@ namespace NuPrescriber.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "PrescriptionId", prescribedDrug.PrescriptionId);
-            ViewData["ProprietaryId"] = new SelectList(_context.Proprietaries, "ProprietaryId", "ProprietaryId", prescribedDrug.ProprietaryId);
+            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "Date", prescribedDrug.PrescriptionId);
+            ViewData["ProprietaryId"] = new SelectList(_context.Proprietaries, "ProprietaryId", "Name", prescribedDrug.ProprietaryId);
             return View(prescribedDrug);
         }
 

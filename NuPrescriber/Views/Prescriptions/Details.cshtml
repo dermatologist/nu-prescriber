@@ -1,4 +1,4 @@
-@model NuPrescriber.Models.PrescriptionViewModels.Prescription
+@model IEnumerable<NuPrescriber.Models.PrescriptionViewModels.PrescribedDrug>
 
 @{
     ViewData["Title"] = "Details";
@@ -11,26 +11,70 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Date)
+            Date:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Date)
+            @ViewData["Date"]
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Doctor)
+            Doctor/Department:
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Doctor.DoctorId)
+            @ViewData["Doctor"] | @ViewData["Department"]
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Patient)
+            Patient: 
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Patient.PatientId)
+            @ViewData["Patient"]
         </dd>
-    </dl>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Drug
+                    </th>
+                    <th>
+                        Dose
+                    </th>
+                    <th>
+                        Frequency
+                    </th>
+                    <th>
+                        Duration
+                    </th>
+                    <th>
+                        Instructions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Proprietary.Name)
+                            @Html.DisplayFor(modelItem => item.Proprietary.IngredientsProprietaries)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Dose)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Frequency)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Duration)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Instructions)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+</dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.PrescriptionId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

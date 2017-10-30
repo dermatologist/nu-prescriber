@@ -43,7 +43,14 @@ namespace NuPrescriber.Controllers
                 return NotFound();
             }
 
-            return View(prescription);
+            ViewData["Doctor"] = prescription.Doctor.Name;
+            ViewData["Patient"] = prescription.Patient.Name;
+            ViewData["Department"] = prescription.Doctor.Department;
+            ViewData["Date"] = prescription.Date;
+
+            var prescribedDrugs = _context.PrescribedDrugs.Include(n => n.Proprietary).Where(m => m.PrescriptionId == id).AsNoTracking();
+
+            return View(await prescribedDrugs.ToListAsync());
         }
 
         // GET: Prescriptions/Create

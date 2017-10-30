@@ -18,5 +18,8 @@ namespace NuPrescriber.Models.PrescriptionViewModels
         public Patient Patient { get; set; }
 
         public DateTime Date { get; set; }
+
+        [Display(Name = "Prescribed Drugs")]
+        public ICollection<PrescribedDrug> PrescribedDrugs { get; set; }
     }
 }
