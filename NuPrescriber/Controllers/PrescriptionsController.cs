@@ -45,6 +45,8 @@ namespace NuPrescriber.Controllers
 
             ViewData["Doctor"] = prescription.Doctor.Name;
             ViewData["Patient"] = prescription.Patient.Name;
+            ViewData["Age"] = prescription.Patient.Age;
+            ViewData["Gender"] = prescription.Patient.Gender;
             ViewData["Department"] = prescription.Doctor.Department;
             ViewData["Date"] = prescription.Date;
 

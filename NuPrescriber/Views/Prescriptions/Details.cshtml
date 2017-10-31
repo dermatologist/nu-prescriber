@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    int count = 0;
 }
 <script>
     $(document).ready(function () {
@@ -44,60 +45,40 @@
                 Patient:
             </dt>
             <dd>
-                @ViewData["Patient"]
+                @ViewData["Patient"] | @ViewData["Age"] | @ViewData["Gender"]
             </dd>
+            <br />
+            <br />
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Drug
-                        </th>
-                        <th>
-                            Dose
-                        </th>
-                        <th>
-                            Frequency
-                        </th>
-                        <th>
-                            Duration
-                        </th>
-                        <th>
-                            Instructions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Proprietary.Name)
-                                <p>
-                                    <i>
-                                        @{
-                                            @ViewData[item.Proprietary.Name]
-                                                @:<br />
-                                          }
-                                    </i>
-                                </p>
-                            </td>
-                            <td>
+                        count++;
+
+
+
+                                @count @:. @Html.DisplayFor(modelItem => item.Proprietary.Name)
+
+                                @:                 
+  
                                 @Html.DisplayFor(modelItem => item.Dose)
-                            </td>
-                            <td>
+
+                        @: 
+
                                 @Html.DisplayFor(modelItem => item.Frequency)
-                            </td>
-                            <td>
+
+                        @: X 
                                 @Html.DisplayFor(modelItem => item.Duration)
-                            </td>
-                            <td>
+
+                        @: 
+
                                 @Html.DisplayFor(modelItem => item.Instructions)
-                            </td>
-                        </tr>
-                                            }
-                </tbody>
-            </table>
+                        @:<br /><i>(
+
+                        @ViewData[item.Proprietary.Name]
+
+                        @:)</i><br />
+                    }
+
         </dl>
     </div>
 <div>
