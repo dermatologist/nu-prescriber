@@ -202,6 +202,8 @@ namespace NuPrescriber.Migrations
 
                     b.Property<string>("Department");
 
+                    b.Property<string>("Hospital");
+
                     b.Property<string>("Name");
 
                     b.Property<string>("Qualification");
@@ -388,7 +390,7 @@ namespace NuPrescriber.Migrations
             modelBuilder.Entity("NuPrescriber.Models.PrescriptionViewModels.PrescribedDrug", b =>
                 {
                     b.HasOne("NuPrescriber.Models.PrescriptionViewModels.Prescription", "Prescription")
-                        .WithMany()
+                        .WithMany("PrescribedDrugs")
                         .HasForeignKey("PrescriptionId")
                         .OnDelete(DeleteBehavior.Cascade);
 

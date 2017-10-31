@@ -43,13 +43,30 @@ namespace NuPrescriber.Controllers
                 return NotFound();
             }
 
+            ViewData["Hospital"] = prescription.Doctor.Hospital;
             ViewData["Doctor"] = prescription.Doctor.Name;
             ViewData["Patient"] = prescription.Patient.Name;
+            ViewData["Age"] = prescription.Patient.Age;
+            ViewData["Gender"] = prescription.Patient.Gender;
             ViewData["Department"] = prescription.Doctor.Department;
             ViewData["Date"] = prescription.Date;
 
-            var prescribedDrugs = _context.PrescribedDrugs.Include(n => n.Proprietary).Where(m => m.PrescriptionId == id).AsNoTracking();
+            var prescribedDrugs = _context.PrescribedDrugs
+                .Include(n => n.Proprietary).ThenInclude(p => p.IngredientsProprietaries)
+                .Where(m => m.PrescriptionId == id).AsNoTracking();
 
+            foreach(PrescribedDrug drug in prescribedDrugs)
+            {
+                Proprietary p = _context.Proprietaries.Include(n => n.IngredientsProprietaries)
+                    .Where(q => q.ProprietaryId == drug.ProprietaryId).SingleOrDefault();
+                foreach(var ip in p.IngredientsProprietaries)
+                {
+                    var ingredient = _context.Ingredients
+                        .Where(c => c.IngredientId == ip.IngredientId).SingleOrDefault();
+                    ViewData[p.Name]  += ingredient.Name + " " + ingredient.Quantity + " ";
+                }
+            }
+            
             return View(await prescribedDrugs.ToListAsync());
         }
 
@@ -74,8 +91,8 @@ namespace NuPrescriber.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId", prescription.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId", prescription.PatientId);
+            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name", prescription.DoctorId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", prescription.PatientId);
             return View(prescription);
         }
 
@@ -92,8 +109,8 @@ namespace NuPrescriber.Controllers
             {
                 return NotFound();
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId", prescription.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId", prescription.PatientId);
+            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name", prescription.DoctorId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", prescription.PatientId);
             return View(prescription);
         }
 
@@ -129,8 +146,8 @@ namespace NuPrescriber.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "DoctorId", prescription.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId", prescription.PatientId);
+            ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name", prescription.DoctorId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", prescription.PatientId);
             return View(prescription);
         }
 

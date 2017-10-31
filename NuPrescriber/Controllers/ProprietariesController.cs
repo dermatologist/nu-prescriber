@@ -190,6 +190,7 @@ namespace NuPrescriber.Controllers
                 {
                     Id = ingredient.IngredientId,
                     Name = ingredient.Name,
+                    Quantity = ingredient.Quantity,
                     Assigned = ingredientsForProprietary.Contains(ingredient.IngredientId)
                 });
             }

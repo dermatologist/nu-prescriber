@@ -13,6 +13,7 @@ namespace NuPrescriber.Models.PrescriptionViewModels
 
         public string Name { get; set; }
         public string Department { get; set; }
+        public string Hospital { get; set; }
         public string Qualification { get; set; }
 
     }

@@ -9,8 +9,8 @@ using NuPrescriber.Models.PrescriptionViewModels;
 namespace NuPrescriber.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171012124309_FieldNameChange")]
-    partial class FieldNameChange
+    [Migration("20171031142510_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -389,7 +389,7 @@ namespace NuPrescriber.Migrations
             modelBuilder.Entity("NuPrescriber.Models.PrescriptionViewModels.PrescribedDrug", b =>
                 {
                     b.HasOne("NuPrescriber.Models.PrescriptionViewModels.Prescription", "Prescription")
-                        .WithMany()
+                        .WithMany("PrescribedDrugs")
                         .HasForeignKey("PrescriptionId")
                         .OnDelete(DeleteBehavior.Cascade);
 

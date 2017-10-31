@@ -17,6 +17,6 @@ namespace NuPrescriber.Models.PrescriptionViewModels
         public string Notes { get; set; }
 
         [Display(Name = "Ingredients")]
-        public ICollection<IngredientProprietary> IngredientsProprietaries { get; set; }
+        public virtual ICollection<IngredientProprietary> IngredientsProprietaries { get; set; }
     }
 }
