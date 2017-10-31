@@ -3,93 +3,106 @@
 @{
     ViewData["Title"] = "Details";
 }
+<script>
+    $(document).ready(function () {
+    var doc = new jsPDF();
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
 
+    $('#cmd').click(function () {
+        doc.fromHTML($('#content').html(), 15, 15, {
+            'width': 170,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('prescription.pdf');
+    });
+    });
+</script>
 <h2>Details</h2>
 
 <div>
     <h4>Prescription</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Date:
-        </dt>
-        <dd>
-            @ViewData["Date"]
-        </dd>
-        <dt>
-            Doctor/Department:
-        </dt>
-        <dd>
-            @ViewData["Doctor"] | @ViewData["Department"]
-        </dd>
-        <dt>
-            Patient: 
-        </dt>
-        <dd>
-            @ViewData["Patient"]
-        </dd>
+    <div id="content">
+        <dl class="dl-horizontal">
+            <dt>
+                Date:
+            </dt>
+            <dd>
+                @ViewData["Date"]
+            </dd>
+            <dt>
+                Doctor/Department:
+            </dt>
+            <dd>
+                @ViewData["Doctor"] | @ViewData["Department"]
+            </dd>
+            <dt>
+                Patient:
+            </dt>
+            <dd>
+                @ViewData["Patient"]
+            </dd>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Drug
-                    </th>
-                    <th>
-                        Dose
-                    </th>
-                    <th>
-                        Frequency
-                    </th>
-                    <th>
-                        Duration
-                    </th>
-                    <th>
-                        Instructions
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Proprietary.Name)
-                            <p>
-                                <i>
-                                    @{
-                                        var v = ViewData[item.Proprietary.Name];
-                                        foreach (var a in v as IEnumerable<NuPrescriber.Models.PrescriptionViewModels.Ingredient>)
-                                        {
-                                            @a.Name 
-                                            
-                                            @a.Quantity
-
-                                            @:<br />
-
-                                        }
-                                    }
-                                </i>
-                            </p>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Dose)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Frequency)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Duration)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Instructions)
-                        </td>
+                        <th>
+                            Drug
+                        </th>
+                        <th>
+                            Dose
+                        </th>
+                        <th>
+                            Frequency
+                        </th>
+                        <th>
+                            Duration
+                        </th>
+                        <th>
+                            Instructions
+                        </th>
                     </tr>
-                }
-            </tbody>
-</table>
-</dl>
-</div>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Proprietary.Name)
+                                <p>
+                                    <i>
+                                        @{
+                                            @ViewData[item.Proprietary.Name]
+                                                @:<br />
+                                          }
+                                    </i>
+                                </p>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Dose)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Frequency)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Duration)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Instructions)
+                            </td>
+                        </tr>
+                                            }
+                </tbody>
+            </table>
+        </dl>
+    </div>
 <div>
+    <div id="editor"></div>
+    <button id="cmd">generate PDF</button>
+
     <a asp-action="Index">Back to List</a>
 </div>

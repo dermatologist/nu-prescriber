@@ -56,12 +56,11 @@ namespace NuPrescriber.Controllers
             {
                 Proprietary p = _context.Proprietaries.Include(n => n.IngredientsProprietaries)
                     .Where(q => q.ProprietaryId == drug.ProprietaryId).SingleOrDefault();
-                
-                foreach(IngredientProprietary ip in p.IngredientsProprietaries)
+                foreach(var ip in p.IngredientsProprietaries)
                 {
-                    var ingredients = _context.Ingredients
-                        .Where(c => c.IngredientId == ip.IngredientId);
-                    ViewData[p.Name] = ingredients;
+                    var ingredient = _context.Ingredients
+                        .Where(c => c.IngredientId == ip.IngredientId).SingleOrDefault();
+                    ViewData[p.Name]  += ingredient.Name + " " + ingredient.Quantity + " ";
                 }
             }
             
