@@ -55,7 +55,22 @@
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Proprietary.Name)
-                            @Html.DisplayFor(modelItem => item.Proprietary.IngredientsProprietaries)
+                            <p>
+                                <i>
+                                    @{
+                                        var v = ViewData[item.Proprietary.Name];
+                                        foreach (var a in v as IEnumerable<NuPrescriber.Models.PrescriptionViewModels.Ingredient>)
+                                        {
+                                            @a.Name 
+                                            
+                                            @a.Quantity
+
+                                            @:<br />
+
+                                        }
+                                    }
+                                </i>
+                            </p>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Dose)
@@ -72,7 +87,7 @@
                     </tr>
                 }
             </tbody>
-
+</table>
 </dl>
 </div>
 <div>

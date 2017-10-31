@@ -48,8 +48,23 @@ namespace NuPrescriber.Controllers
             ViewData["Department"] = prescription.Doctor.Department;
             ViewData["Date"] = prescription.Date;
 
-            var prescribedDrugs = _context.PrescribedDrugs.Include(n => n.Proprietary).Where(m => m.PrescriptionId == id).AsNoTracking();
+            var prescribedDrugs = _context.PrescribedDrugs
+                .Include(n => n.Proprietary).ThenInclude(p => p.IngredientsProprietaries)
+                .Where(m => m.PrescriptionId == id).AsNoTracking();
 
+            foreach(PrescribedDrug drug in prescribedDrugs)
+            {
+                Proprietary p = _context.Proprietaries.Include(n => n.IngredientsProprietaries)
+                    .Where(q => q.ProprietaryId == drug.ProprietaryId).SingleOrDefault();
+                
+                foreach(IngredientProprietary ip in p.IngredientsProprietaries)
+                {
+                    var ingredients = _context.Ingredients
+                        .Where(c => c.IngredientId == ip.IngredientId);
+                    ViewData[p.Name] = ingredients;
+                }
+            }
+            
             return View(await prescribedDrugs.ToListAsync());
         }
 
