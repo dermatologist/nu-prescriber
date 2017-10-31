@@ -54,7 +54,7 @@ namespace NuPrescriber.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DoctorId,Name,Department,Qualification")] Doctor doctor)
+        public async Task<IActionResult> Create([Bind("DoctorId,Name,Department,Hospital,Qualification")] Doctor doctor)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace NuPrescriber.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DoctorId,Name,Department,Qualification")] Doctor doctor)
+        public async Task<IActionResult> Edit(int id, [Bind("DoctorId,Name,Department,Hospital,Qualification")] Doctor doctor)
         {
             if (id != doctor.DoctorId)
             {

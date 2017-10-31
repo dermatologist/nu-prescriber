@@ -49,8 +49,8 @@ namespace NuPrescriber.Controllers
         // GET: Allergies/Create
         public IActionResult Create()
         {
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId");
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId");
+            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "Name");
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name");
             return View();
         }
 
@@ -67,8 +67,8 @@ namespace NuPrescriber.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId", allergy.IngredientId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId", allergy.PatientId);
+            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "Name", allergy.IngredientId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", allergy.PatientId);
             return View(allergy);
         }
 
@@ -85,8 +85,8 @@ namespace NuPrescriber.Controllers
             {
                 return NotFound();
             }
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId", allergy.IngredientId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId", allergy.PatientId);
+            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "Name", allergy.IngredientId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", allergy.PatientId);
             return View(allergy);
         }
 
@@ -122,8 +122,8 @@ namespace NuPrescriber.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "IngredientId", allergy.IngredientId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientId", allergy.PatientId);
+            ViewData["IngredientId"] = new SelectList(_context.Ingredients, "IngredientId", "Name", allergy.IngredientId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", allergy.PatientId);
             return View(allergy);
         }
 
