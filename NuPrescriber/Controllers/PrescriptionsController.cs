@@ -74,7 +74,7 @@ namespace NuPrescriber.Controllers
         public IActionResult Create()
         {
             ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name");
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name");
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientNameWithDob");
             return View();
         }
 
@@ -92,7 +92,7 @@ namespace NuPrescriber.Controllers
                 return RedirectToAction("Index");
             }
             ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name", prescription.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", prescription.PatientId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientNameWithDob", prescription.PatientId);
             return View(prescription);
         }
 
@@ -110,7 +110,7 @@ namespace NuPrescriber.Controllers
                 return NotFound();
             }
             ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name", prescription.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", prescription.PatientId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientNameWithDob", prescription.PatientId);
             return View(prescription);
         }
 
@@ -147,7 +147,7 @@ namespace NuPrescriber.Controllers
                 return RedirectToAction("Index");
             }
             ViewData["DoctorId"] = new SelectList(_context.Doctors, "DoctorId", "Name", prescription.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "Name", prescription.PatientId);
+            ViewData["PatientId"] = new SelectList(_context.Patients, "PatientId", "PatientNameWithDob", prescription.PatientId);
             return View(prescription);
         }
 
