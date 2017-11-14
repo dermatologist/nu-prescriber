@@ -14,6 +14,7 @@ using NuPrescriber.Models;
 using NuPrescriber.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace NuPrescriber
 {
@@ -56,6 +57,11 @@ namespace NuPrescriber
                                  .RequireAuthenticatedUser()
                                  .Build();
                 config.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+            // Parse view folders
+            services.Configure<RazorViewEngineOptions>(options => {
+                options.ViewLocationExpanders.Add(new ViewLocationExpander());
             });
 
             // Add application services.
