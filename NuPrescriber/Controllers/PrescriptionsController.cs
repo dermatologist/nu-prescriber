@@ -20,10 +20,51 @@ namespace NuPrescriber.Controllers
         }
 
         // GET: Prescriptions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var applicationDbContext = _context.Prescriptions.Include(p => p.Doctor).Include(p => p.Patient);
-            return View(await applicationDbContext.ToListAsync());
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["StatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "stat_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var prescriptions = _context.Prescriptions.Include(s => s.Patient).Include(s => s.Doctor).AsQueryable();
+                                
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                prescriptions = prescriptions.Where(s => s.Patient.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "stat_desc":
+                    prescriptions = prescriptions.OrderByDescending(s => s.Patient.Name);
+                    break;
+                case "Date":
+                    prescriptions = prescriptions.OrderBy(s => s.Date);
+                    break;
+                case "date_desc":
+                    prescriptions = prescriptions.OrderByDescending(s => s.Date);
+                    break;
+                default:
+                    prescriptions = prescriptions.OrderBy(s => s.Patient.Name);
+                    break;
+            }
+            int pageSize = 15;
+            return View(await PaginatedList<Prescription>.CreateAsync(prescriptions.AsNoTracking(), page ?? 1, pageSize));
+
+            //var applicationDbContext = _context.Prescriptions.Include(p => p.Doctor).Include(p => p.Patient);
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Prescriptions/Details/5
