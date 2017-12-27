@@ -22,5 +22,13 @@ namespace NuPrescriber.Models.PrescriptionViewModels
 
         [Display(Name = "Prescribed Drugs")]
         public ICollection<PrescribedDrug> PrescribedDrugs { get; set; }
+        [NotMapped]
+        public string PrescriptionWithPatient
+        {
+            get
+            {
+                return string.Format("{0} ({1})", Patient.Name, Date);
+            }
+        }
     }
 }

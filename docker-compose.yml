@@ -7,7 +7,7 @@ services:
       context: ./NuPrescriber
       dockerfile: Dockerfile
     ports:
-      - 8088:80
+      - 8080:80
     volumes:
       - prescriber-app:/app
 volumes:
