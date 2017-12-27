@@ -27,7 +27,7 @@ namespace NuPrescriber.Models.PrescriptionViewModels
         {
             get
             {
-                return string.Format("{0} ({1})", Patient.Name, Date);
+                return string.Format("{0} ({1})", PrescriptionId, Date);
             }
         }
     }
