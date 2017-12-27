@@ -20,9 +20,56 @@ namespace NuPrescriber.Controllers
         }
 
         // GET: Patients
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(await _context.Patients.ToListAsync());
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["StatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "stat_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var patients = from s in _context.Patients
+                                       select s;
+            var patient_id = 0;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                patients = patients.Where(s => s.Name.Contains(searchString)
+                || s.PatientNameWithDob.Contains(searchString));
+                bool result = Int32.TryParse(searchString, out patient_id);
+                if (result)
+                {
+                    patients = patients.Where(s => s.PatientId == patient_id);
+
+                }
+
+            }
+            switch (sortOrder)
+            {
+                case "stat_desc":
+                    patients = patients.OrderByDescending(s => s.Name);
+                    break;
+                case "Date":
+                    patients = patients.OrderBy(s => s.Dob);
+                    break;
+                case "date_desc":
+                    patients = patients.OrderByDescending(s => s.Dob);
+                    break;
+                default:
+                    patients = patients.OrderBy(s => s.Name);
+                    break;
+            }
+            int pageSize = 15;
+            return View(await PaginatedList<Patient>.CreateAsync(patients.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Patients/Details/5

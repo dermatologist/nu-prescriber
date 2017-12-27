@@ -49,7 +49,7 @@ namespace NuPrescriber.Controllers
         // GET: PrescribedDrugs/Create
         public IActionResult Create()
         {
-            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "Date");
+            ViewData["PrescriptionId"] = new SelectList(_context.Prescriptions, "PrescriptionId", "PrescriptionWithPatient");
             ViewData["ProprietaryId"] = new SelectList(_context.Proprietaries, "ProprietaryId", "Name");
             return View();
         }

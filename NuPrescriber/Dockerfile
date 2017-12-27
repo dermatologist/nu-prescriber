@@ -25,7 +25,7 @@ RUN dotnet publish --output /app/ --configuration Release
 
 
 # run database migrations
-RUN dotnet ef migrations add InitialCreate
+RUN dotnet ef migrations add FinalCreate
 RUN dotnet ef database update
 
 

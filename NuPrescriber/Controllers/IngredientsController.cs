@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -17,9 +18,49 @@ namespace NuPrescriber.Controllers
         }
 
         // GET: Ingredients
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(await _context.Ingredients.ToListAsync());
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["StatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "stat_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var ingredients = from s in _context.Ingredients
+                           select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ingredients = ingredients.Where(s => s.Name.Contains(searchString));
+
+            }
+
+            switch (sortOrder)
+            {
+                case "stat_desc":
+                    ingredients = ingredients.OrderByDescending(s => s.Name);
+                    break;
+                case "Date":
+                    ingredients = ingredients.OrderBy(s => s.Quantity);
+                    break;
+                case "date_desc":
+                    ingredients = ingredients.OrderByDescending(s => s.Quantity);
+                    break;
+                default:
+                    ingredients = ingredients.OrderBy(s => s.Name);
+                    break;
+            }
+            int pageSize = 15;
+            return View(await PaginatedList<Ingredient>.CreateAsync(ingredients.AsNoTracking(), page ?? 1, pageSize));
         }
 
         // GET: Ingredients/Details/5

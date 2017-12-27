@@ -10,10 +10,11 @@ namespace NuPrescriber.Models.PrescriptionViewModels
     public class Prescription
     {
         public int PrescriptionId { get; set; }
-
+        [Display(Name = "Doctor")]
         public int DoctorId { get; set; }
         public Doctor Doctor { get; set; }
 
+        [Display(Name = "Patient")]
         public int PatientId { get; set; }
         public Patient Patient { get; set; }
 
@@ -21,5 +22,13 @@ namespace NuPrescriber.Models.PrescriptionViewModels
 
         [Display(Name = "Prescribed Drugs")]
         public ICollection<PrescribedDrug> PrescribedDrugs { get; set; }
+        [NotMapped]
+        public string PrescriptionWithPatient
+        {
+            get
+            {
+                return string.Format("{0} ({1})", PrescriptionId, Date);
+            }
+        }
     }
 }

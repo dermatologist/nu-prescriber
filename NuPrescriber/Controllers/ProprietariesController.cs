@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,10 +19,51 @@ namespace NuPrescriber.Controllers
         }
 
         // GET: Proprietaries
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var applicationDbContext = _context.Proprietaries.Include(p => p.IngredientsProprietaries);
-            return View(await applicationDbContext.ToListAsync());
+
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["StatusSortParm"] = String.IsNullOrEmpty(sortOrder) ? "stat_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var proprietaries = _context.Proprietaries.Include(s => s.IngredientsProprietaries).AsQueryable();
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                proprietaries = proprietaries.Where(s => s.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "stat_desc":
+                    proprietaries = proprietaries.OrderByDescending(s => s.Name);
+                    break;
+                case "Date":
+                    proprietaries = proprietaries.OrderBy(s => s.Price);
+                    break;
+                case "date_desc":
+                    proprietaries = proprietaries.OrderByDescending(s => s.Price);
+                    break;
+                default:
+                    proprietaries = proprietaries.OrderBy(s => s.Name);
+                    break;
+            }
+            int pageSize = 15;
+            return View(await PaginatedList<Proprietary>.CreateAsync(proprietaries.AsNoTracking(), page ?? 1, pageSize));
+
+            //var applicationDbContext = _context.Proprietaries.Include(p => p.IngredientsProprietaries);
+            //return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Proprietaries/Details/5
